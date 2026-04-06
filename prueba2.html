@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>SYSTEM_TERMINAL</title>
+
+<style>
+body {
+    background:black;
+    color:#00ff9f;
+    font-family: monospace;
+    padding:20px;
+}
+
+#output {
+    white-space: pre-line;
+}
+
+input {
+    background:black;
+    color:#00ff9f;
+    border:none;
+    outline:none;
+    width:100%;
+    font-family: monospace;
+}
+</style>
+</head>
+
+<body>
+
+<div id="output">
+>                     // SISTEMA DE PRUEBA INICIALIZADO //
+
+
+
+> acceso bajo responsabilidad del usuario (realizada la prueba no volver a intentar)
+> escribe "entrar" 
+<br><br>
+</div>
+
+<input type="text" id="input" autofocus>
+
+<script>
+
+let output = document.getElementById("output");
+let input = document.getElementById("input");
+
+// memoria del usuario
+let visitas = localStorage.getItem("terminal_visitas") || 0;
+visitas++;
+localStorage.setItem("terminal_visitas", visitas);
+
+// estado
+let acceso = false;
+let patronDetectado = false;
+
+function escribir(texto) {
+    output.innerHTML += texto + "\n";
+    window.scrollTo(0, document.body.scrollHeight);
+}
+
+input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+        let cmd = input.value.toLowerCase().trim();
+        escribir("> " + cmd);
+
+        // comandos
+        if (cmd === "entrar") {
+            escribir("comandos disponibles:");
+            escribir("prueba  /  estado  /  patron   / salir");
+
+        }
+
+        else if (cmd === "prueba") {
+            acceso = true;
+            escribir("sonido emitido en frecuencias fuera del rango audible...");
+        }
+
+        else if (cmd === "estado") {
+            if (!acceso) {
+                escribir("acceso denegado");
+            } else {
+                escribir("estado del sistema:");
+                escribir("visitas detectadas: " + visitas);
+                escribir("latencia: 300ms");
+            }
+        }
+
+        else if (cmd === "patron") {
+            patronDetectado = true;
+            escribir("analizando...");
+            setTimeout(() => {
+                escribir("repeticion confirmada");
+            }, 1000);
+        }
+
+        else if (cmd === "salir") {
+            escribir("no es posible salir del sistema");
+        }
+
+        // comandos ocultos
+        else if (cmd === "contacto") {
+            escribir("accediendo a registros...");
+            setTimeout(() => {
+                escribir("error: acceso incompleto");
+                escribir("fecha:05.04.2026.02.00");
+            }, 1200);
+        }
+
+        else if (cmd === "reset") {
+            localStorage.clear();
+            escribir("memoria borrada");
+        }
+
+        else {
+            escribir("comando no reconocido");
+        }
+
+        // evento especial
+        if (visitas >= 1 && acceso && patronDetectado) {
+            setTimeout(() => {
+                escribir("");
+                escribir("no es la primera vez que haces esto, transmisión exitosa");
+                escribir("el sistema ya no necesita instrucciones");
+                escribir("la decision ya fue tomada, latencia: 300ms");
+            }, 1500);
+        }
+
+        input.value = "";
+    }
+});
+
+</script>
+
+</body>
+</html>
